@@ -40,6 +40,7 @@ public class GlobalExceptionHandler {
 
 		return creatError(ex, HttpStatus.CONFLICT, request);
 	}
+	
 	@ExceptionHandler(RoleAlreadyExistsException .class)
 	public ResponseEntity<ErrorResponse> handleResourceNotFound(RoleAlreadyExistsException  ex,
 			HttpServletRequest request) {
@@ -47,6 +48,12 @@ public class GlobalExceptionHandler {
 		return creatError(ex, HttpStatus.CONFLICT, request);
 	}
 	
+	@ExceptionHandler(UnauthorizedException .class)
+	public ResponseEntity<ErrorResponse> handleResourceNotFound(UnauthorizedException  ex,
+			HttpServletRequest request) {
+		
+		return creatError(ex, HttpStatus.FORBIDDEN, request);
+	}
 	
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)

@@ -14,6 +14,7 @@ import com.company.salestracker.service.RoleService;
 import com.company.salestracker.successResponse.SuccessResponse;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -26,7 +27,7 @@ public class RoleController {
 	
 	@PreAuthorize("hasAnyAuthority('CREATE_ADMIN', 'CREATE_SUPER_ADMIN', 'CREATE_MANAGER')")
     @PostMapping("/create")
-    public ResponseEntity<SuccessResponse> createRole(@RequestBody CreateRoleRequest request, HttpServletRequest httpRequest) {
+    public ResponseEntity<SuccessResponse> createRole(@RequestBody @Valid CreateRoleRequest request, HttpServletRequest httpRequest) {
         roleService.createRole(request);
 
         return ResponseUtil.success(

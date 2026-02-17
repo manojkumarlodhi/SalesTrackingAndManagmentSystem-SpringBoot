@@ -22,6 +22,8 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
             User owner
     );
 	
-	
+	@Query("SELECT r FROM Role r WHERE r.roleName = :roleName AND r.isDelete = false AND (r.owner = :owner OR r.owner IS NULL)")
+	Optional<Role> findByRoleNameAndOwnerOrNull(@Param("roleName") String roleName, @Param("owner") User owner);
+
 
 }

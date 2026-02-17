@@ -15,6 +15,7 @@ import com.company.salestracker.service.UserService;
 import com.company.salestracker.successResponse.SuccessResponse;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -27,7 +28,7 @@ public class UserController {
 	
 	@PreAuthorize("hasAnyAuthority('CREATE_ADMIN', 'CREATE_SUPER_ADMIN', 'CREATE_MANAGER', 'CREATE_SALES')")
     @PostMapping
-    public ResponseEntity<SuccessResponse> createUser(@RequestBody UserRequest requestDto, HttpServletRequest request) {
+    public ResponseEntity<SuccessResponse> createUser(@RequestBody @Valid UserRequest requestDto, HttpServletRequest request) {
         UserResponse response = userService.createUser(requestDto);
         return ResponseUtil.success(
                 "User created successfully",

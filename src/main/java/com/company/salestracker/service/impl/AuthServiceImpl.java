@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import com.company.salestracker.dto.request.LoginRequest;
+import com.company.salestracker.exception.UnauthorizedException;
 import com.company.salestracker.security.JwtTokenProvider;
 import com.company.salestracker.service.AuthService;
 @Service
@@ -28,28 +29,35 @@ public class AuthServiceImpl implements AuthService {
 	    @Override
 	    public Map<String, String> login(LoginRequest request) {
 
-	        Authentication authentication =
-	                authenticationManager.authenticate(
-	                        new UsernamePasswordAuthenticationToken(
-	                                request.getEmail(),
-	                                request.getPassword()
-	                        )
-	                );
+	        try {
 
-	        UserDetails userDetails =
-	                (UserDetails) authentication.getPrincipal();
+	            Authentication authentication =
+	                    authenticationManager.authenticate(
+	                            new UsernamePasswordAuthenticationToken(
+	                                    request.getEmail(),
+	                                    request.getPassword()
+	                            )
+	                    );
 
-	        String accessToken =
-	                jwtTokenProvider.generateAccessToken(userDetails);
+	            UserDetails userDetails =
+	                    (UserDetails) authentication.getPrincipal();
 
-	        String refreshToken =
-	                jwtTokenProvider.generateRefreshToken(userDetails.getUsername());
+	            String accessToken =
+	                    jwtTokenProvider.generateAccessToken(userDetails);
 
-	        return Map.of(
-	                "accessToken", accessToken,
-	                "refreshToken", refreshToken
-	        );
+	            String refreshToken =
+	                    jwtTokenProvider.generateRefreshToken(userDetails.getUsername());
+
+	            return Map.of(
+	                    "accessToken", accessToken,
+	                    "refreshToken", refreshToken
+	            );
+
+	        } catch (Exception ex) {
+	            throw new UnauthorizedException("Invalid username or password");
+	        }
 	    }
+
 
 	    @Override
 	    public Map<String, String> refreshToken(String refreshToken) {
